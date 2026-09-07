@@ -13,8 +13,8 @@ const countries = [
     { id: 'es', name: 'España', flag: '🇪🇸', currency: '€', prefix: '+34' },
     { id: 've', name: 'Venezuela', flag: '🇻🇪', currency: 'Bs.', prefix: '+58' },
     { id: 'co', name: 'Colombia', flag: '🇨🇴', currency: '$', prefix: '+57' },
-    { id: 'ua-tarjeta', name: 'Ucrania Tarj.', flag: '🇺🇦', currency: '₴', prefix: '+380', directory: false },
-    { id: 'ua-prov', name: 'Ucrania Prov.', flag: '🇺🇦', currency: '₴', prefix: '+380', directory: false }
+    { id: 'ua-tarjeta', name: 'Ucrania Tarj.', flag: '🇺🇦', currency: '₴', prefix: '+380', directory: false, defaultOp: 'divide' },
+    { id: 'ua-prov', name: 'Ucrania Prov.', flag: '🇺🇦', currency: '₴', prefix: '+380', directory: false, defaultOp: 'divide' }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,6 +43,11 @@ function initRatesCalculator() {
     const calcCountries = countries.filter(c => !c.isUSD);
     
     calcCountries.forEach(country => {
+        const initialOp = country.defaultOp === 'divide' ? 'divide' : 'multiply';
+        const initialSign = initialOp === 'divide' ? '÷' : '×';
+        const initialLabel = initialOp === 'divide' ? `Monto (${country.currency})` : 'Monto ($)';
+        const initialSymbol = initialOp === 'divide' ? country.currency : '$';
+
         const row = document.createElement('div');
         row.className = 'calc-row';
         row.innerHTML = `
@@ -56,20 +61,20 @@ function initRatesCalculator() {
                 <input type="number" id="rate-${country.id}" class="rate-input" placeholder="0.00" step="any" ${hasSavedRates ? 'readonly' : ''}>
             </div>
             
-            <button class="toggle-btn rate-op-btn" id="op-${country.id}" data-op="multiply">×</button>
+            <button class="toggle-btn rate-op-btn" id="op-${country.id}" data-op="${initialOp}">${initialSign}</button>
             
             <div class="input-group">
-                <label id="amount-label-${country.id}">Monto ($)</label>
+                <label id="amount-label-${country.id}">${initialLabel}</label>
                 <div class="input-with-symbol">
-                    <span id="amount-symbol-${country.id}" class="symbol" style="left: 1rem; right: auto;">$</span>
-                    <input type="number" id="amount-${country.id}" style="padding-left: 3rem;" placeholder="0.00" step="any">
+                    <span id="amount-symbol-${country.id}" class="symbol" style="left: 1rem; right: auto;">${initialSymbol}</span>
+                    <input type="number" id="amount-${country.id}" style="padding-left: 2rem;" placeholder="0.00" step="any">
                 </div>
             </div>
             
             <button class="action-btn calc-rate-btn" data-id="${country.id}">Calcular</button>
             
             <div class="result-box">
-                <span id="result-${country.id}">0.00 ${country.currency}</span>
+                <span id="result-${country.id}">0.00 ${initialOp === 'divide' ? '$' : country.currency}</span>
             </div>
         `;
         container.appendChild(row);
