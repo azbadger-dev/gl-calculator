@@ -12,7 +12,9 @@ const countries = [
     { id: 'py', name: 'Paraguay', flag: '🇵🇾', currency: '₲', prefix: '+595' },
     { id: 'es', name: 'España', flag: '🇪🇸', currency: '€', prefix: '+34' },
     { id: 've', name: 'Venezuela', flag: '🇻🇪', currency: 'Bs.', prefix: '+58' },
-    { id: 'co', name: 'Colombia', flag: '🇨🇴', currency: '$', prefix: '+57' }
+    { id: 'co', name: 'Colombia', flag: '🇨🇴', currency: '$', prefix: '+57' },
+    { id: 'ua-tarjeta', name: 'Ucrania Tarj.', flag: '🇺🇦', currency: '₴', prefix: '+380' },
+    { id: 'ua-prov', name: 'Ucrania Prov.', flag: '🇺🇦', currency: '₴', prefix: '+380' }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -57,10 +59,10 @@ function initRatesCalculator() {
             <button class="toggle-btn rate-op-btn" id="op-${country.id}" data-op="multiply">×</button>
             
             <div class="input-group">
-                <label>Monto ($)</label>
+                <label id="amount-label-${country.id}">Monto ($)</label>
                 <div class="input-with-symbol">
-                    <span class="symbol" style="left: 1rem; right: auto;">$</span>
-                    <input type="number" id="amount-${country.id}" style="padding-left: 2rem;" placeholder="0.00" step="any">
+                    <span id="amount-symbol-${country.id}" class="symbol" style="left: 1rem; right: auto;">$</span>
+                    <input type="number" id="amount-${country.id}" style="padding-left: 3rem;" placeholder="0.00" step="any">
                 </div>
             </div>
             
@@ -80,13 +82,22 @@ function initRatesCalculator() {
         // Event listener toggle operacion
         const toggleBtn = row.querySelector('.rate-op-btn');
         toggleBtn.addEventListener('click', () => {
+            const amountLabel = document.getElementById(`amount-label-${country.id}`);
+            const amountSymbol = document.getElementById(`amount-symbol-${country.id}`);
+            
             if (toggleBtn.dataset.op === 'multiply') {
                 toggleBtn.dataset.op = 'divide';
                 toggleBtn.textContent = '÷';
+                amountLabel.textContent = `Monto (${country.currency})`;
+                amountSymbol.textContent = country.currency;
             } else {
                 toggleBtn.dataset.op = 'multiply';
                 toggleBtn.textContent = '×';
+                amountLabel.textContent = `Monto ($)`;
+                amountSymbol.textContent = '$';
             }
+            // Recalcular automáticamente al cambiar la operación para actualizar símbolos
+            calculateRate(country);
         });
 
         // Event listener calcular fila
@@ -138,14 +149,18 @@ function calculateRate(country) {
     const op = opBtn.dataset.op;
 
     let result = 0;
+    let resultSymbol = '';
+    
     if (op === 'multiply') {
         result = amount * rate;
+        resultSymbol = country.currency;
     } else {
         result = rate !== 0 ? amount / rate : 0;
+        resultSymbol = '$';
     }
 
     // Formatear a 2 decimales
-    resultSpan.textContent = `${result.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${country.currency}`;
+    resultSpan.textContent = `${result.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${resultSymbol}`;
 }
 
 
