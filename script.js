@@ -13,8 +13,8 @@ const countries = [
     { id: 'es', name: 'España', flag: '🇪🇸', currency: '€', prefix: '+34' },
     { id: 've', name: 'Venezuela', flag: '🇻🇪', currency: 'Bs.', prefix: '+58' },
     { id: 'co', name: 'Colombia', flag: '🇨🇴', currency: '$', prefix: '+57' },
-    { id: 'ua-tarjeta', name: 'Ucrania Tarj.', flag: '🇺🇦', currency: '₴', prefix: '+380' },
-    { id: 'ua-prov', name: 'Ucrania Prov.', flag: '🇺🇦', currency: '₴', prefix: '+380' }
+    { id: 'ua-tarjeta', name: 'Ucrania Tarj.', flag: '🇺🇦', currency: '₴', prefix: '+380', directory: false },
+    { id: 'ua-prov', name: 'Ucrania Prov.', flag: '🇺🇦', currency: '₴', prefix: '+380', directory: false }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -203,8 +203,9 @@ function initPercentageCalculator() {
 function initDirectory() {
     const container = document.getElementById('directory-container');
     
-    // Ordenar alfabéticamente
-    const sortedCountries = [...countries].sort((a, b) => a.name.localeCompare(b.name));
+    // Filtrar los que no van en el directorio y ordenar alfabéticamente
+    const dirCountries = countries.filter(c => c.directory !== false);
+    const sortedCountries = [...dirCountries].sort((a, b) => a.name.localeCompare(b.name));
 
     sortedCountries.forEach(country => {
         const item = document.createElement('div');
