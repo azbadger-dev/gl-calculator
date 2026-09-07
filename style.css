@@ -1,0 +1,370 @@
+:root {
+    --bg-color: #0f172a;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --secondary-color: #475569;
+    --secondary-hover: #334155;
+    --input-bg: rgba(15, 23, 42, 0.6);
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background Blobs for Glassmorphism effect */
+.background-blobs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.blob {
+    position: absolute;
+    filter: blur(80px);
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.shape1 {
+    top: -10%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: #3b82f6;
+}
+
+.shape2 {
+    bottom: -10%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: #8b5cf6;
+}
+
+.shape3 {
+    top: 40%;
+    left: 40%;
+    width: 400px;
+    height: 400px;
+    background: #0ea5e9;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    padding: 2.5rem;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+header {
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    color: var(--text-secondary);
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.divider {
+    border: 0;
+    height: 1px;
+    background: var(--glass-border);
+    margin: 1rem 0;
+}
+
+/* Info Box */
+.info-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    color: var(--text-primary);
+    text-align: center;
+}
+.info-box strong {
+    color: #60a5fa;
+}
+
+/* Actions Header */
+.actions-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Buttons */
+button {
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.primary-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.secondary-btn {
+    background-color: var(--secondary-color);
+}
+
+.secondary-btn:hover {
+    background-color: var(--secondary-hover);
+    transform: translateY(-2px);
+}
+
+.action-btn {
+    background-color: var(--primary-color);
+    padding: 0.75rem 1.25rem;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    align-self: flex-end;
+}
+.action-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.toggle-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    align-self: flex-end;
+    backdrop-filter: blur(4px);
+}
+
+.toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Inputs */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+input[type="number"] {
+    background: var(--input-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+input[type="number"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+input[type="number"]:read-only {
+    opacity: 0.7;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.input-with-symbol {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-symbol input {
+    padding-right: 2.5rem;
+}
+
+.input-with-symbol .symbol {
+    position: absolute;
+    right: 1rem;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+/* Result Box */
+.result-box {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    align-self: flex-end;
+    height: 48px;
+}
+
+.result-box span {
+    font-weight: 600;
+    color: #34d399;
+    font-size: 1.1rem;
+}
+
+/* Calculator Rows */
+.rates-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.calc-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 1.25rem;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+}
+
+.country-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 160px;
+    font-weight: 500;
+}
+
+.country-flag {
+    font-size: 1.5rem;
+}
+
+/* Make inputs flex so they take available space but respect min sizes */
+.calc-row > .input-group {
+    flex: 1;
+    min-width: 120px;
+}
+
+/* Directory Grid */
+.directory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.directory-item {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--glass-border);
+    padding: 1rem;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.directory-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.directory-item .country {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.directory-item .prefix {
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .calc-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .toggle-btn, .action-btn, .result-box {
+        align-self: stretch;
+        width: 100%;
+    }
+    
+    .country-info {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}

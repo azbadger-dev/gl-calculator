@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora & Directorio</title>
+    <link rel="icon" type="image/webp" href="assets/Icon.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob shape1"></div>
+        <div class="blob shape2"></div>
+        <div class="blob shape3"></div>
+    </div>
+
+    <div class="container glass-panel">
+        <header>
+            <h1>Calculadora de Tasas</h1>
+            <p>Ingresa las tasas iniciales, se guardarán automáticamente para tu próxima visita.</p>
+        </header>
+
+        <div class="info-box dollar-info">
+            <strong>💡 Países con Dólar (USD):</strong> Panamá, Estados Unidos, Argentina y Ecuador.
+        </div>
+
+        <section class="calculator-section">
+            <div class="actions-header">
+                <button id="save-rates-btn" class="primary-btn">Guardar Tasas</button>
+                <button id="edit-rates-btn" class="secondary-btn hidden">Editar Tasas</button>
+            </div>
+            
+            <div id="rates-container" class="rates-grid">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section class="percentage-section">
+            <h2>Calculadora de Porcentajes</h2>
+            <div class="calc-row">
+                <div class="input-group">
+                    <label>Cantidad</label>
+                    <input type="number" id="perc-amount" placeholder="0.00" step="any">
+                </div>
+                
+                <button id="perc-toggle" class="toggle-btn" data-op="add">+</button>
+                
+                <div class="input-group">
+                    <label>Porcentaje</label>
+                    <div class="input-with-symbol">
+                        <input type="number" id="perc-value" placeholder="0" step="any">
+                        <span class="symbol">%</span>
+                    </div>
+                </div>
+                
+                <button id="perc-calc-btn" class="action-btn">Hacer operación</button>
+                
+                <div class="result-box">
+                    <span id="perc-result">0.00</span>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section class="directory-section">
+            <h2>Directorio de Prefijos Telefónicos</h2>
+            <div id="directory-container" class="directory-grid">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
