@@ -239,6 +239,16 @@ input[type="number"]:focus {
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+/* Ocultar flechitas de los input number */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 input[type="number"]:read-only {
     opacity: 0.7;
     background: rgba(0, 0, 0, 0.2);

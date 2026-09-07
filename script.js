@@ -19,6 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initRatesCalculator();
     initPercentageCalculator();
     initDirectory();
+
+    // Prevenir que la rueda del ratón cambie los valores en inputs number
+    document.addEventListener('wheel', (event) => {
+        if (document.activeElement.type === 'number') {
+            document.activeElement.blur();
+        }
+    });
 });
 
 // === RATES CALCULATOR ===
