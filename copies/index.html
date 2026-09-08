@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copys Rápidos & Directorio</title>
+    <link rel="icon" type="image/webp" href="../assets/Icon.png">
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+      /* Estilos específicos para la página de copies */
+      .copy-row {
+          display: flex;
+          gap: 1rem;
+          align-items: flex-start;
+          background: rgba(0, 0, 0, 0.1);
+          padding: 1.25rem;
+          border-radius: 16px;
+          border: 1px solid var(--glass-border);
+          margin-bottom: 1rem;
+          transition: all 0.3s ease;
+      }
+      .drag-handle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-secondary);
+          cursor: grab;
+          font-size: 1.8rem;
+          padding-top: 0.75rem; /* Alineado con el padding del textarea */
+          transition: color 0.3s;
+      }
+      .drag-handle:hover {
+          color: var(--text-primary);
+      }
+      .drag-handle:active {
+          cursor: grabbing;
+      }
+      .copy-row.dragging {
+          opacity: 0.4;
+          border-color: var(--primary-color);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+      .copy-row.drag-over-top {
+          border-top: 2px dashed var(--primary-color);
+      }
+      .copy-row.drag-over-bottom {
+          border-bottom: 2px dashed var(--primary-color);
+      }
+      .copy-textarea {
+          flex: 1;
+          min-height: 80px;
+          background: var(--input-bg);
+          border: 1px solid var(--glass-border);
+          border-radius: 12px;
+          padding: 0.75rem 1rem;
+          color: var(--text-primary);
+          font-family: 'Poppins', sans-serif;
+          font-size: 1rem;
+          outline: none;
+          resize: vertical;
+      }
+      .copy-textarea:focus {
+          border-color: var(--primary-color);
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+      .copy-textarea:read-only {
+          opacity: 0.8;
+          background: rgba(0, 0, 0, 0.2);
+          border-color: transparent;
+      }
+      .copy-actions {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+      }
+      
+      /* Toast notification */
+      .toast-notification {
+          position: fixed;
+          bottom: 30px;
+          left: 50%;
+          transform: translateX(-50%) translateY(100px);
+          background: rgba(16, 185, 129, 0.9); /* success color */
+          color: white;
+          padding: 0.75rem 1.5rem;
+          border-radius: 50px;
+          font-weight: 500;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+          opacity: 0;
+          transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          z-index: 1000;
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          pointer-events: none;
+      }
+      .toast-notification.show {
+          transform: translateX(-50%) translateY(0);
+          opacity: 1;
+      }
+      .icon-btn {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid var(--glass-border);
+          background: rgba(255, 255, 255, 0.1);
+          color: var(--text-primary);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 1.5rem; /* Tamaño para los Boxicons */
+      }
+      .icon-btn:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+      }
+      .icon-btn.save-btn {
+          background: var(--primary-color);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+      .icon-btn.save-btn:hover {
+          background: var(--primary-hover);
+      }
+      .icon-btn.copy-btn {
+          background: var(--success);
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+      .icon-btn.copy-btn:hover {
+          background: #059669; /* darker success */
+      }
+      .icon-btn.delete-btn {
+          background: rgba(239, 68, 68, 0.15);
+          color: #f87171;
+          border-color: rgba(239, 68, 68, 0.3);
+      }
+      .icon-btn.delete-btn:hover {
+          background: rgba(239, 68, 68, 0.3);
+      }
+      
+      @media (max-width: 768px) {
+          .copy-row {
+              flex-direction: column;
+          }
+          .copy-actions {
+              width: 100%;
+              justify-content: flex-end;
+          }
+      }
+    </style>
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob shape1"></div>
+        <div class="blob shape2"></div>
+        <div class="blob shape3"></div>
+    </div>
+
+    <div class="container glass-panel">
+        <header>
+            <h1>Copys Rápidos</h1>
+            <p>Guarda tus textos frecuentes para copiarlos fácilmente. Se mantendrán guardados en tu navegador.</p>
+        </header>
+
+        <section>
+            <div class="actions-header">
+                <button id="add-copy-btn" class="primary-btn">+ Añadir Copy</button>
+            </div>
+            
+            <div id="copies-container">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </section>
+        
+        <hr class="divider">
+        
+        <div style="text-align: center;">
+             <a href="../index.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;">Volver a la Calculadora</a>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast-notification">¡Copiado al portapapeles! 📋</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
