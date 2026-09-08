@@ -13,6 +13,8 @@ const countries = [
     { id: 'es', name: 'España', flag: '🇪🇸', currency: '€', prefix: '+34' },
     { id: 've', name: 'Venezuela', flag: '🇻🇪', currency: 'Bs.', prefix: '+58' },
     { id: 'co', name: 'Colombia', flag: '🇨🇴', currency: '$', prefix: '+57' },
+    { id: 'cl', name: 'Chile', flag: '🇨🇱', currency: '$', prefix: '+56' },
+    { id: 'br', name: 'Brasil', flag: '🇧🇷', currency: 'R$', prefix: '+55' },
     { id: 'ua-tarjeta', name: 'Ucrania Tarj.', flag: '🇺🇦', currency: '₴', prefix: '+380', directory: false, defaultOp: 'divide' },
     { id: 'ua-prov', name: 'Ucrania Prov.', flag: '🇺🇦', currency: '₴', prefix: '+380', directory: false, defaultOp: 'divide' }
 ];
