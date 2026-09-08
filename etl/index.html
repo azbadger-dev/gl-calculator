@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procesador ETL - Gamer Lab</title>
+    <!-- Favicon reuse from parent -->
+    <link rel="icon" type="image/webp" href="../assets/Icon.png">
+    <!-- Reusing base styles from parent -->
+    <link rel="stylesheet" href="../style.css">
+    <!-- Specific styles for ETL -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob shape1"></div>
+        <div class="blob shape2"></div>
+        <div class="blob shape3"></div>
+    </div>
+
+    <div class="container glass-panel etl-container">
+        <header>
+            <h1>Procesador de Cuentas ETL</h1>
+            <p>Pega tus datos masivos, selecciona el formato y cópialos estructurados a Excel.</p>
+        </header>
+
+        <section class="etl-section">
+            <div class="format-selector">
+                <label class="radio-label">
+                    <input type="radio" name="format" value="1" checked>
+                    <span class="custom-radio"></span>
+                    Cuentas Camilo
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="format" value="2">
+                    <span class="custom-radio"></span>
+                    Proveedor Uk
+                </label>
+            </div>
+
+            <textarea id="raw-data" placeholder="Pega los datos de las cuentas aquí..." rows="12"></textarea>
+
+            <button id="process-btn" class="primary-btn btn-block">Procesar</button>
+        </section>
+
+        <hr class="divider">
+
+        <section class="preview-section">
+            <h2>Previsualización</h2>
+            <div class="table-container">
+                <table id="preview-table">
+                    <thead>
+                        <tr id="table-head">
+                            <!-- Los encabezados se generarán dinámicamente -->
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Las filas de la tabla se generarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <button id="copy-btn" class="primary-btn btn-block" style="background-color: var(--success); display: none;">Copiar a Excel</button>
+            </div>
+        </section>
+    </div>
+    
+    <div id="toast" class="toast-notification">¡Copiado a Excel exitosamente! 📋</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
