@@ -67,7 +67,7 @@ function initRatesCalculator() {
                 <label id="amount-label-${country.id}">${initialLabel}</label>
                 <div class="input-with-symbol">
                     <span id="amount-symbol-${country.id}" class="symbol" style="left: 1rem; right: auto;">${initialSymbol}</span>
-                    <input type="number" id="amount-${country.id}" style="padding-left: 2rem;" placeholder="0.00" step="any">
+                    <input type="number" id="amount-${country.id}" style="padding-left: 3rem;" placeholder="0.00" step="any">
                 </div>
             </div>
             
