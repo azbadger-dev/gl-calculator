@@ -20,6 +20,34 @@ function initCopies() {
         renderCopyRow(id, '', false, true);
     });
 
+    // Lógica para el Modal de Eliminación
+    const deleteModal = document.getElementById('delete-modal');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    let copyToDelete = null;
+
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteModal.classList.remove('show');
+        copyToDelete = null;
+    });
+
+    confirmDeleteBtn.addEventListener('click', () => {
+        if (copyToDelete) {
+            const { id, row } = copyToDelete;
+            deleteModal.classList.remove('show');
+            
+            // Efecto de desaparecer suavemente
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+                row.remove();
+                saveOrder();
+            }, 300);
+            
+            copyToDelete = null;
+        }
+    });
+
     let draggedRow = null;
 
     // Función para renderizar la fila de un copy
@@ -160,13 +188,10 @@ function initCopies() {
         // Lógica para botón de Eliminar
         const deleteBtn = row.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', () => {
-            // Efecto de desaparecer suavemente
-            row.style.opacity = '0';
-            row.style.transform = 'translateX(20px)';
-            setTimeout(() => {
-                row.remove();
-                saveOrder();
-            }, 300);
+            // Mostrar modal de confirmación en lugar de eliminar directamente
+            copyToDelete = { id, row };
+            const modal = document.getElementById('delete-modal');
+            modal.classList.add('show');
         });
     }
 

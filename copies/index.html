@@ -149,6 +149,62 @@
               justify-content: flex-end;
           }
       }
+      
+      /* Modal Styles */
+      .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(15, 23, 42, 0.7);
+          backdrop-filter: blur(8px);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 2000;
+          opacity: 0;
+          pointer-events: none;
+          transition: all 0.3s ease;
+      }
+      .modal-overlay.show {
+          opacity: 1;
+          pointer-events: all;
+      }
+      .modal-content {
+          padding: 2rem;
+          border-radius: 20px;
+          text-align: center;
+          max-width: 400px;
+          width: 90%;
+          transform: scale(0.9);
+          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .modal-overlay.show .modal-content {
+          transform: scale(1);
+      }
+      .modal-content h3 {
+          margin-bottom: 0.75rem;
+          font-size: 1.5rem;
+          color: var(--text-primary);
+      }
+      .modal-content p {
+          color: var(--text-secondary);
+          margin-bottom: 1.5rem;
+          font-size: 0.95rem;
+      }
+      .modal-actions {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+      }
+      .delete-btn-style {
+          background-color: var(--danger) !important;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+      }
+      .delete-btn-style:hover {
+          background-color: #dc2626 !important;
+      }
     </style>
 </head>
 <body>
@@ -182,6 +238,18 @@
     </div>
     
     <div id="toast" class="toast-notification">¡Copiado al portapapeles! 📋</div>
+    
+    <!-- Modal de confirmación para eliminar -->
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <h3>¿Eliminar copy?</h3>
+            <p>¿Estás seguro de que deseas eliminar este copy? No podrás deshacer esta acción.</p>
+            <div class="modal-actions">
+                <button id="cancel-delete-btn" class="secondary-btn">Cancelar</button>
+                <button id="confirm-delete-btn" class="primary-btn delete-btn-style">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
