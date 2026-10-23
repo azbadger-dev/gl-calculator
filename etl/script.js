@@ -28,6 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
         '2FA Google'
     ];
 
+    const headersF3 = [
+        'Backup Codes', 
+        '2FA Google', 
+        'ID'
+    ];
+
     const copyBtn = document.getElementById('copy-btn');
     let currentParsedData = [];
     let currentFormat = '1';
@@ -104,9 +110,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function parseData(text, format) {
         if (format === '1') {
             return parseFormat1(text);
-        } else {
+        } else if (format === '2') {
             return parseFormat2(text);
+        } else if (format === '3') {
+            return parseFormat3(text);
         }
+        return [];
     }
 
     function parseFormat1(text) {
@@ -235,11 +244,88 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function parseFormat3(text) {
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l !== '');
+        if (lines.length === 0) return [];
+
+        function is2FALine(line, nextLine) {
+            const clean = line.replace(/^(2fa|google authenticator).*?:\s*/i, '').trim();
+            if (nextLine) {
+                const nextClean = nextLine.replace(/^(2fa|google authenticator).*?:\s*/i, '').trim();
+                if (nextClean.length >= 30 && /^[A-Za-z0-9]+$/.test(nextClean)) {
+                    return false;
+                }
+            }
+            return (clean.length >= 24 && !clean.includes(' ') && /^[A-Za-z0-9]+$/.test(clean)) ||
+                   line.toLowerCase().includes('2fa');
+        }
+
+        const twoFAIndices = [];
+        for (let i = 0; i < lines.length; i++) {
+            if (is2FALine(lines[i], lines[i + 1])) {
+                twoFAIndices.push(i);
+            }
+        }
+
+        // Si se detectaron una o varias claves 2FA, estructuramos cada cuenta
+        if (twoFAIndices.length > 0) {
+            return twoFAIndices.map((twoFAIndex, idx) => {
+                let id = '[N/A]';
+                // La línea inmediatamente anterior al 2FA es el ID
+                if (twoFAIndex > 0) {
+                    id = lines[twoFAIndex - 1].replace(/^(id|cuenta|usuario):\s*/i, '').trim();
+                }
+
+                let fa2 = lines[twoFAIndex].replace(/^(2fa|google authenticator).*?:\s*/i, '').trim();
+
+                // Los códigos de respaldo van desde twoFAIndex + 1 hasta el próximo ID (o fin del texto)
+                const nextIDIndex = (idx + 1 < twoFAIndices.length) ? twoFAIndices[idx + 1] - 1 : lines.length;
+                const rawCodes = lines.slice(twoFAIndex + 1, nextIDIndex);
+
+                const backupCodes = rawCodes.filter(line => {
+                    const lower = line.toLowerCase();
+                    return !lower.startsWith('backup code') && !lower.startsWith('backup:');
+                }).map(code => code.replace(/^[-*•]\s*/, '').trim()).filter(c => c !== '');
+
+                return {
+                    backupCodes: backupCodes.length > 0 ? backupCodes.join(', ') : '[N/A]',
+                    fa2: fa2 || '[N/A]',
+                    id: id || '[N/A]'
+                };
+            });
+        }
+
+        // Fallback: Si no hay coincidencia 2FA estricta, separar por bloques vacíos o bloque único
+        let chunks = text.split(/\n\s*\n/).filter(c => c.trim() !== '');
+        return chunks.map(chunk => {
+            const chunkLines = chunk.split('\n').map(l => l.trim()).filter(l => l !== '');
+            const id = chunkLines[0] ? chunkLines[0].replace(/^(id|cuenta|usuario):\s*/i, '').trim() : '[N/A]';
+            const fa2 = chunkLines[1] ? chunkLines[1].replace(/^(2fa|google authenticator).*?:\s*/i, '').trim() : '[N/A]';
+            const backupCodes = chunkLines.slice(2).filter(line => {
+                const lower = line.toLowerCase();
+                return !lower.startsWith('backup code') && !lower.startsWith('backup:');
+            }).map(code => code.replace(/^[-*•]\s*/, '').trim()).filter(c => c !== '');
+
+            return {
+                backupCodes: backupCodes.length > 0 ? backupCodes.join(', ') : '[N/A]',
+                fa2: fa2,
+                id: id
+            };
+        });
+    }
+
     function renderTable(data, format) {
         tableHead.innerHTML = '';
         tableBody.innerHTML = '';
 
-        const headers = format === '1' ? headersF1 : headersF2;
+        let headers;
+        if (format === '1') {
+            headers = headersF1;
+        } else if (format === '2') {
+            headers = headersF2;
+        } else {
+            headers = headersF3;
+        }
         
         headers.forEach(h => {
             const th = document.createElement('th');
@@ -250,9 +336,14 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach(row => {
             const tr = document.createElement('tr');
             
-            const values = format === '1' 
-                ? [row.email, row.mailPass, row.dob, row.empty, row.psEmail, row.psPass, row.backupCodes, row.fa2]
-                : [row.email, row.mailPass, row.dob, row.id, row.psEmail, row.psPass, row.backupCodes, row.fa2];
+            let values;
+            if (format === '1') {
+                values = [row.email, row.mailPass, row.dob, row.empty, row.psEmail, row.psPass, row.backupCodes, row.fa2];
+            } else if (format === '2') {
+                values = [row.email, row.mailPass, row.dob, row.id, row.psEmail, row.psPass, row.backupCodes, row.fa2];
+            } else {
+                values = [row.backupCodes, row.fa2, row.id];
+            }
                 
             values.forEach(val => {
                 const td = document.createElement('td');
@@ -271,8 +362,10 @@ document.addEventListener('DOMContentLoaded', () => {
             let rowValues;
             if (format === '1') {
                 rowValues = [row.email, row.mailPass, row.dob, row.empty, row.psEmail, row.psPass, row.backupCodes, row.fa2];
-            } else {
+            } else if (format === '2') {
                 rowValues = [row.email, row.mailPass, row.dob, row.id, row.psEmail, row.psPass, row.backupCodes, row.fa2];
+            } else {
+                rowValues = [row.backupCodes, row.fa2, row.id];
             }
             return rowValues.join('\t');
         }).join('\n');

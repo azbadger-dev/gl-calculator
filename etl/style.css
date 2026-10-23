@@ -7,9 +7,10 @@
 /* Selector de formato */
 .format-selector {
     display: flex;
-    gap: 2.5rem;
+    gap: 2rem;
     margin-bottom: 1.5rem;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .radio-label {
