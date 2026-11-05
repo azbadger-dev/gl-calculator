@@ -25,6 +25,8 @@ function initCopies() {
     let editingCopyId = null;
     let copyToDelete = null;
     let toastTimeout = null;
+    let draggedCard = null;
+    let wasJustDragging = false;
 
     // Render inicial
     renderAllCopies();
@@ -213,6 +215,9 @@ function initCopies() {
         const previewHtml = `<div class="copy-card-preview"><i class='bx bx-text'></i> ${escapeHtml(truncatedPreview)}</div>`;
 
         card.innerHTML = `
+            <div class="drag-handle" title="Arrastrar para ordenar" aria-label="Arrastrar para ordenar">
+                <i class='bx bx-grid-vertical'></i>
+            </div>
             <div class="copy-card-info">
                 ${titleHtml}
                 ${previewHtml}
@@ -227,8 +232,115 @@ function initCopies() {
             </div>
         `;
 
+        // Controles de Drag and Drop
+        const dragHandle = card.querySelector('.drag-handle');
+
+        // Evitar que hacer clic en el handle dispare el copiado
+        dragHandle.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Activar draggable solo cuando se presiona sobre el dragHandle
+        dragHandle.addEventListener('mousedown', () => {
+            card.draggable = true;
+        });
+
+        dragHandle.addEventListener('mouseup', () => {
+            if (!card.classList.contains('dragging')) {
+                card.draggable = false;
+            }
+        });
+
+        dragHandle.addEventListener('mouseleave', () => {
+            if (!card.classList.contains('dragging')) {
+                card.draggable = false;
+            }
+        });
+
+        // Drag start y end
+        card.addEventListener('dragstart', (e) => {
+            draggedCard = card;
+            wasJustDragging = true;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', copy.id);
+            setTimeout(() => {
+                card.classList.add('dragging');
+            }, 0);
+        });
+
+        card.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+            card.draggable = false;
+            draggedCard = null;
+            document.querySelectorAll('.copy-card-btn').forEach(c => {
+                c.classList.remove('drag-over-before', 'drag-over-after');
+            });
+            setTimeout(() => {
+                wasJustDragging = false;
+            }, 120);
+        });
+
+        // Dragover: Soporte bidimensional (horizontal y vertical) en el grid
+        card.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            if (!draggedCard || draggedCard === card) return;
+
+            const rect = card.getBoundingClientRect();
+            const isSingleColumn = window.innerWidth <= 768;
+
+            let insertBefore = false;
+
+            if (isSingleColumn) {
+                // Móvil / 1 columna: flujo vertical puro
+                const midY = rect.top + rect.height / 2;
+                insertBefore = e.clientY < midY;
+            } else {
+                // Escritorio / 2 columnas: flujo bidimensional
+                const midX = rect.left + rect.width / 2;
+                if (e.clientY < rect.top + rect.height * 0.3) {
+                    insertBefore = true;
+                } else if (e.clientY > rect.top + rect.height * 0.7) {
+                    insertBefore = false;
+                } else {
+                    insertBefore = e.clientX < midX;
+                }
+            }
+
+            if (insertBefore) {
+                card.classList.add('drag-over-before');
+                card.classList.remove('drag-over-after');
+            } else {
+                card.classList.add('drag-over-after');
+                card.classList.remove('drag-over-before');
+            }
+        });
+
+        card.addEventListener('dragleave', (e) => {
+            if (!card.contains(e.relatedTarget)) {
+                card.classList.remove('drag-over-before', 'drag-over-after');
+            }
+        });
+
+        card.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const wasBefore = card.classList.contains('drag-over-before');
+            card.classList.remove('drag-over-before', 'drag-over-after');
+
+            if (!draggedCard || draggedCard === card) return;
+
+            if (wasBefore) {
+                card.before(draggedCard);
+            } else {
+                card.after(draggedCard);
+            }
+
+            updateOrderFromDOM();
+        });
+
         // Clic en todo el botón para copiar el texto
         card.addEventListener('click', () => {
+            if (wasJustDragging) return;
             handleCopyAction(copy, card);
         });
 
@@ -255,6 +367,21 @@ function initCopies() {
         });
 
         return card;
+    }
+
+    // Actualiza el orden del arreglo y persiste en localStorage al reordenar
+    function updateOrderFromDOM() {
+        const domCards = container.querySelectorAll('.copy-card-btn');
+        const newCopies = [];
+        domCards.forEach(c => {
+            const id = c.id.replace('copy-card-', '');
+            const found = copies.find(item => item.id === id);
+            if (found) {
+                newCopies.push(found);
+            }
+        });
+        copies = newCopies;
+        saveCopiesToStorage();
     }
 
     /* ========================================================

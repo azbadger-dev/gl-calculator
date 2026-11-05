@@ -32,13 +32,13 @@
           background: rgba(30, 41, 59, 0.45);
           border: 1px solid var(--glass-border);
           border-radius: 16px;
-          padding: 1rem 1.25rem;
+          padding: 0.9rem 1.15rem;
           min-height: 88px;
           cursor: pointer;
           position: relative;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
           user-select: none;
-          gap: 1.25rem;
+          gap: 0.85rem;
           backdrop-filter: blur(8px);
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
           text-align: left;
@@ -53,6 +53,62 @@
 
       .copy-card-btn:active {
           transform: translateY(0) scale(0.985);
+      }
+
+      /* Tirador de arrastre (3 puntitos / rejilla vertical) */
+      .drag-handle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-secondary);
+          cursor: grab;
+          font-size: 1.5rem;
+          padding: 0.35rem 0.2rem;
+          transition: color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+          flex-shrink: 0;
+          user-select: none;
+          border-radius: 6px;
+      }
+
+      .drag-handle:hover {
+          color: var(--text-primary);
+          background: rgba(255, 255, 255, 0.08);
+          transform: scale(1.15);
+      }
+
+      .drag-handle:active {
+          cursor: grabbing;
+      }
+
+      /* Estados durante el Drag and Drop */
+      .copy-card-btn.dragging {
+          opacity: 0.35;
+          border: 1px dashed var(--primary-color) !important;
+          transform: scale(0.97);
+          box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+      }
+
+      .copy-card-btn.drag-over-before {
+          border-left: 4px solid #60a5fa !important;
+          box-shadow: -6px 0 16px rgba(59, 130, 246, 0.45);
+      }
+
+      .copy-card-btn.drag-over-after {
+          border-right: 4px solid #60a5fa !important;
+          box-shadow: 6px 0 16px rgba(59, 130, 246, 0.45);
+      }
+
+      @media (max-width: 768px) {
+          .copy-card-btn.drag-over-before {
+              border-left: 1px solid var(--glass-border) !important;
+              border-top: 4px solid #60a5fa !important;
+              box-shadow: 0 -6px 16px rgba(59, 130, 246, 0.45);
+          }
+          .copy-card-btn.drag-over-after {
+              border-right: 1px solid var(--glass-border) !important;
+              border-bottom: 4px solid #60a5fa !important;
+              box-shadow: 0 6px 16px rgba(59, 130, 246, 0.45);
+          }
       }
 
       /* Animación de feedback táctil al copiar */
