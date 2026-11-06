@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formateador Parent-Child - Gamer Lab</title>
+    <!-- Favicon reuse from parent -->
+    <link rel="icon" type="image/webp" href="../assets/Icon-excel.png">
+    <!-- Base styles from parent -->
+    <link rel="stylesheet" href="../style.css">
+    <!-- Specific styles for Parent-Child -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob shape1"></div>
+        <div class="blob shape2"></div>
+        <div class="blob shape3"></div>
+    </div>
+
+    <div class="container glass-panel parent-child-container">
+        <header>
+            <h1>Formateador Parent-Child</h1>
+            <p>Pega tus columnas de Excel (correo y contraseña) y conviértelas a texto plano estructurado.</p>
+        </header>
+
+        <section class="pc-input-section">
+            <div class="format-selector">
+                <label class="radio-label">
+                    <input type="radio" name="format" value="mother-child" checked>
+                    <span class="custom-radio"></span>
+                    Madre-Hija (Alternado)
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="format" value="mothers">
+                    <span class="custom-radio"></span>
+                    Solo Madres
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="format" value="children">
+                    <span class="custom-radio"></span>
+                    Solo Hijas
+                </label>
+            </div>
+
+            <div class="date-config-box" id="date-config-box">
+                <div class="date-config-left">
+                    <i class='bx bx-calendar-event'></i>
+                    <span>Fecha para Hijas:</span>
+                </div>
+                <div class="date-input-group">
+                    <input type="text" id="child-date-input" class="date-input" placeholder="D/M/YYYY">
+                    <button type="button" id="reset-date-btn" class="pill-btn" title="Recalcular fecha automática según la regla">+1m +1d -17a</button>
+                </div>
+                <div class="date-hint">
+                    Regla automática: 1 día más, 1 mes más y 17 años atrás (ej: 7/12/2008). Puedes editarla si lo requieres.
+                </div>
+            </div>
+
+            <textarea id="raw-data" placeholder="Pega aquí las filas de Excel o texto (Columna 1: Correo, Columna 2: Contraseña)...&#10;Ejemplo:&#10;zouakaleah7196@outlook.com | hcyfsvrud7&#10;mihran4107021992@outlook.com | uukcfynyq2" rows="10"></textarea>
+
+            <div class="action-row">
+                <button id="process-btn" class="primary-btn btn-block">
+                    <i class='bx bx-play-circle'></i> Procesar Texto
+                </button>
+                <button type="button" id="clear-btn" class="clear-btn" title="Limpiar todos los campos">
+                    <i class='bx bx-trash'></i>
+                </button>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section class="result-section">
+            <div class="result-header">
+                <h2>Resultado Formateado</h2>
+                <span id="account-counter" class="account-badge">
+                    <i class='bx bx-user-check'></i> 0 cuentas
+                </span>
+            </div>
+
+            <textarea id="output-text" placeholder="El texto formateado aparecerá aquí listo para ser copiado..." rows="12" readonly></textarea>
+
+            <button id="copy-btn" class="primary-btn btn-block copy-result-btn" style="display: none;">
+                <i class='bx bx-copy'></i> Copiar Resultado al Portapapeles
+            </button>
+        </section>
+
+        <hr class="divider">
+
+        <div class="footer-nav">
+            <a href="../index.html"><i class='bx bx-arrow-back'></i> Calculadora</a>
+            <a href="../etl/index.html"><i class='bx bx-table'></i> Procesador ETL</a>
+            <a href="../copies/index.html"><i class='bx bx-copy-alt'></i> Copys Rápidos</a>
+        </div>
+    </div>
+
+    <!-- Notificación Toast -->
+    <div id="toast" class="toast-notification">
+        <i class='bx bx-check-circle' style="font-size: 1.25rem;"></i>
+        <span id="toast-message">¡Texto copiado al portapapeles exitosamente! 📋</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
